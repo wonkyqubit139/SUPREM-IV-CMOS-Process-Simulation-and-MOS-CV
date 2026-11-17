@@ -1,0 +1,23 @@
+unset echo
+option quiet
+line x loc = 0 tag = left
+line x loc = 100000 tag=right
+line y loc = 0 tag = top
+line y loc=525.0 spacing=0.25 tag=bottom
+region silicon xlo = left xhi = right ylo = top yhi = bottom
+bound exposed xlo=left xhi=right ylo=top yhi=top
+init boron conc=4.48e16 ori=100
+diffuse time=5 temp=1100 dry
+diffuse time=60 temp=1100 wet
+diffuse time=5 temp=1100 dry
+
+etch oxide start x=0 y=-0.379
+etch oxide start x=60000 y=-0.379
+etch oxide start x=60000 y=0.315
+etch oxide start x=0 y=0.315
+
+#Gate Oxide Dry oxidation
+diffuse time=60 temp=1000 dry
+structure outf=terminal_Dry_3.str
+select z=y*1e8 label="Depth(A)"
+print.1d x.v=0 form=8.0f layers

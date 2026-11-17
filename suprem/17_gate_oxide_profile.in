@@ -1,0 +1,46 @@
+# Plotting the result
+set echo
+#option quiet
+mode one.dim
+
+#definition of the mesh to be used for the simulation
+#the vertical direction
+line x loc = 0 tag = top
+line x loc=525.0 tag=bottom
+
+#the silicon wafer i.e. this defined region is made up of silicon
+region silicon xlo = top xhi = bottom
+
+#set up exposed surfaces i.e. this defined area is exposed to gas
+bound exposed xlo=top xhi=top
+
+#the initialization of wafer orientation and boron concentration of 4.88e16
+init boron conc=4.48e16 ori=100
+
+#the dry oxidation step for 5 minutes at 1100 degree celsius temperature
+diffuse time=5 temp=1100 dry
+diffuse time=60 temp=1100 wet
+diffuse time=5 temp=1100 dry
+
+etch oxide start x=0 y=-0.379
+etch oxide start x=60000 y=-0.379
+etch oxide start x=60000 y=0.315
+etch oxide start x=0 y=0.315
+
+#Gate Oxide Dry oxidation
+diffuse time=60 temp=1000 dry
+
+#save the data
+structure outf=plot_Dry_1.str
+
+# plot the graph after first dry oxidation.
+#plot the initial profile
+select z=log10(boron)
+plot.1d x.ma=2.0 y.mi=14.0 y.max=20.0
+
+#save the data
+structure out=d3_last.str
+
+#plot the final profile
+select z=log10(bor)
+plot.1d x.v=0.1 cle=f axi=f

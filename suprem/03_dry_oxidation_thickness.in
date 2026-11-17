@@ -1,0 +1,27 @@
+unset echo
+option quiet
+# Definition of the mesh to be used for the simulation
+# x dimension definition
+line x loc = 0 tag = left
+line x loc = 100000 tag = right
+# The vertical direction definition
+line y loc = 0 tag = top
+line y loc = 525.0 spacing = 0.25 tag = bottom
+# The silicon wafer i.e. this defined region is made up of silicon
+region silicon xlo = left xhi = right ylo = top yhi = bottom
+# Set up exposed surfaces i.e. this defined area is exposed to gas
+bound exposed xlo = left xhi = right ylo = top yhi = top
+# The initialization of wafer orientation and boron concentration
+# 4.48e16 cm^-3 calculated mathematically.
+init boron conc=4.48e16 ori=100
+# The dry oxidation step for 5 minutes at 1100 degree celsius
+# followed by wet oxidation at same temperature for 60 minutes
+# and again dry oxidation with same conditions
+diffuse time=5 temp=1100 dry
+diffuse time=60 temp=1100 wet
+#diffuse time=5 temp=1100 dry
+# Save the data
+structure outf=terminal_dry2.str
+# Vertical model (Deal-Grove diffusion) is default for oxidation
+select z=y*1e8 label="Depth(A)"
+print.1d x.v=0 form=8.0f layers
