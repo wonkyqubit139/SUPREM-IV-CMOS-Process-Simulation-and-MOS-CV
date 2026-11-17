@@ -2,13 +2,6 @@
 
 This project simulates the front end of a CMOS process on a boron-doped silicon wafer in SUPREM-IV.GS: dry, wet and dry oxidation, then lithography and BHF etch of the gate area, then gate oxide growth. It checks the simulated oxide thicknesses against hand calculations with the Deal–Grove model, looks at how boron redistributes between Si and SiO₂, and models the high-frequency C–V curve of the resulting MOS capacitor in Python.
 
-| | |
-|---|---|
-| **Course** | ELL7303/ELL730 term paper, IIT Delhi |
-| **Supervisor** | Prof. Madhusudan Singh |
-| **Date** | March 2026 (Winter semester) |
-| **Team** | Group A9: Kabir Kashyap, Humanshu Gajbhiye, Ruchika Kant |
-
 ## Problem
 
 Start with a prime-grade 100 mm, 525 µm thick <100> Si wafer, boron doped, resistivity 0.32 Ω·cm, and run this flow:
@@ -114,24 +107,3 @@ Outputs: C_ox ≈ 69 nF/cm² in accumulation, falling to about 35 nF/cm² in inv
 
 - **SUPREM-IV.GS:** run each deck with `suprem <deck>.in`. The `_profile` decks open the `xsuprem` plot window.
 - **Python:** `pip install numpy matplotlib`, then `python python/mos_cv_curve.py`.
-
-## Notes and known issues
-
-The decks are kept exactly as they appear in the report. Each point below gives what the report or code shows, and separately any interpretation that was not tested by re-running SUPREM.
-
-- **Boron concentration.** The report calculates Nₐ = 4.88×10¹⁶ cm⁻³, but every deck uses `init boron conc=4.48e16`. This looks like a typo. Its effect on oxide growth at this doping level is expected to be small, but that has not been re-simulated.
-- **Step 3 deck.** In `03_dry_oxidation_thickness.in` (as printed in the report) the final `diffuse time=5 temp=1100 dry` line is commented out. The step 3 profile deck has it active. The step 3 layer table shows the same thicknesses as step 2, but its integrated values differ slightly, so it is not clear which version of the deck produced it. Thicknesses are printed to 1 nm, and Deal–Grove predicts only about 0.5 nm of extra growth, so the table could not show the difference either way.
-- **Etch syntax.** The gate-area etch is written as four `etch oxide start` lines. SUPREM-IV.GS polygon etches are usually written as `start`, then `continue`, then `done`, so this etch may not have removed the oxide as intended. The step 17 result (only about 7 nm of extra growth on 694 nm) is consistent with that, but this has not been confirmed by re-running.
-- **Step 17 hand calculation.** The report uses the 1100 °C constants (A = 0.09 µm, B = 0.0321 µm²/hr) and a starting oxide of 661.5 nm. The problem specifies 1000 °C, after a BHF etch of the gate area.
-- **Wet oxidation hand calculation.** B is scaled only for pressure (×760/640). The 0.92 H₂O fraction is not included.
-- **C–V oxide model.** The script uses one 50 nm oxide with εᵣ = 3.9. The report describes dry and wet oxide (εᵣ 3.9 and 3.7) as capacitors in series, but the script does not implement this.
-
-## Contributions
-
-From the report's statement of contributions:
-
-| Member | Work |
-|---|---|
-| Kabir Kashyap | Analytical expressions and numerical estimates for the oxide thicknesses; worked on the C–V curve |
-| Humanshu Gajbhiye | Executed the SUPREM codes; analysed the device cross-section at each step |
-| Ruchika Kant | Developed and executed the SUPREM codes and the Python C–V code; LaTeX report and diagrams; contributed to the numerical estimates |
