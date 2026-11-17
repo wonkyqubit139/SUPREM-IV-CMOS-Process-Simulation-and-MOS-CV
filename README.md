@@ -117,14 +117,14 @@ Outputs: C_ox ≈ 69 nF/cm² in accumulation, falling to about 35 nF/cm² in inv
 
 ## Notes and known issues
 
-The decks are kept exactly as they were run for the report. Reading them again, these are worth knowing:
+The decks are kept exactly as they appear in the report. Each point below gives what the report or code shows, and separately any interpretation that was not tested by re-running SUPREM.
 
-- **Boron concentration.** The decks use `init boron conc=4.48e16`, but the calculated value is 4.88×10¹⁶ cm⁻³. This is a typo. At this doping level it has a negligible effect on oxide growth.
-- **Step 3.** In `03_dry_oxidation_thickness.in`, the last `diffuse ... dry` line is commented out. So the step 3 layer table is really the step 2 result again, which is why it shows no change. The step 3 profile deck does include the final dry oxidation. Deal–Grove predicts only about 0.5 nm extra growth, so the thickness barely changes either way.
-- **Etch syntax.** The gate-area etch is written as four `etch oxide start` lines. In SUPREM-IV.GS a polygon etch is normally `start`, then `continue`, then `done`. So the oxide may not actually have been removed. That fits the step 17 result: only about 7 nm of extra growth on top of 694 nm, rather than a fresh gate oxide growing on bare silicon.
-- **Step 17 hand calculation.** It used the 1100 °C rate constants and the full 661.5 nm as starting oxide. The problem specifies 1000 °C on the etched gate area.
-- **Wet oxidation hand calculation.** It used the full-pressure steam constants without scaling for the 0.92 H₂O fraction.
-- **C–V oxide model.** The C–V script assumes a single 50 nm gate oxide with εᵣ = 3.9, which is what you would expect from 1000 °C / 60 min dry oxidation on bare silicon. It does not use the SUPREM oxide stack. The report discusses treating dry and wet oxide (εᵣ 3.9 and 3.7) as capacitors in series, but the script does not implement that.
+- **Boron concentration.** The report calculates Nₐ = 4.88×10¹⁶ cm⁻³, but every deck uses `init boron conc=4.48e16`. This looks like a typo. Its effect on oxide growth at this doping level is expected to be small, but that has not been re-simulated.
+- **Step 3 deck.** In `03_dry_oxidation_thickness.in` (as printed in the report) the final `diffuse time=5 temp=1100 dry` line is commented out. The step 3 profile deck has it active. The step 3 layer table shows the same thicknesses as step 2, but its integrated values differ slightly, so it is not clear which version of the deck produced it. Thicknesses are printed to 1 nm, and Deal–Grove predicts only about 0.5 nm of extra growth, so the table could not show the difference either way.
+- **Etch syntax.** The gate-area etch is written as four `etch oxide start` lines. SUPREM-IV.GS polygon etches are usually written as `start`, then `continue`, then `done`, so this etch may not have removed the oxide as intended. The step 17 result (only about 7 nm of extra growth on 694 nm) is consistent with that, but this has not been confirmed by re-running.
+- **Step 17 hand calculation.** The report uses the 1100 °C constants (A = 0.09 µm, B = 0.0321 µm²/hr) and a starting oxide of 661.5 nm. The problem specifies 1000 °C, after a BHF etch of the gate area.
+- **Wet oxidation hand calculation.** B is scaled only for pressure (×760/640). The 0.92 H₂O fraction is not included.
+- **C–V oxide model.** The script uses one 50 nm oxide with εᵣ = 3.9. The report describes dry and wet oxide (εᵣ 3.9 and 3.7) as capacitors in series, but the script does not implement this.
 
 ## Contributions
 
